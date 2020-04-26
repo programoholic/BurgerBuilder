@@ -1,0 +1,32 @@
+.input{
+    width: 50%;
+    height: 30px;
+    /* background-color: #bdbdbd; */
+    border: 1px solid;
+    border-radius: 6px;
+}
+.wrapper{
+    position: absolute;
+    left: 25%;
+    width: 60%;
+    border: 1px solid;
+    height: 50%;
+    padding: 20px;
+    right: 20%;
+}
+
+.list{
+    width: 50%;
+    border: 1px solid;
+    padding: 0px;
+    border-radius: 6px;
+    background-color: #f9f7f7;
+}
+.listItem{
+    padding: 10px;
+    border: 1px solid #bfbbbb;
+    cursor: pointer;
+}
+.listItem:hover{
+   background-color: #bfbbbb
+}    
