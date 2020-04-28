@@ -38,3 +38,9 @@ export const initIngredient = ()=>{
       })
     }
 }
+export const setRedirectUrl = (url) =>{
+    return {
+        type : actionTypes.REDIRECT_URL_CREATED,
+        value : url
+    }
+}

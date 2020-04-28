@@ -22,10 +22,10 @@ export const burgerOrderStart = () => {
   }
 }
 
-export const purchaseBurger = (orderData) => {
+export const purchaseBurger = (orderData, token) => {
   return dispatch => {
     dispatch(burgerOrderStart());
-    axios.post('/orders.json', orderData)
+    axios.post('/orders.json?auth=' + token, orderData)
       .then(response => {
         console.log(response.data);
         dispatch(burgerOrderSuccess(orderData, response.data));
@@ -58,24 +58,30 @@ export const orderFetchFailure = (error) => {
   }
 }
 
-export const fetchOrders = () => {
-  return dispatch => {
+export const fetchOrders = (token) => {
+  return (dispatch) => {
+    debugger
     dispatch(orderFetchInit());
-    axios.get('/orders.json')
-      .then(res => {
-        const fetchedOrders = [];
-        for (let key in res.data) {
-          fetchedOrders.push({
-            ...res.data[key],
-            id: key
-          });
-        }
-        dispatch(orderFetchSuccess(fetchedOrders));
-      })
-      .catch(err => {
-        dispatch(orderFetchFailure(err));
-      });
+    if (!token) {
+      token = localStorage.getItem('token');
+    }
+    if (!token) {
+      dispatch(orderFetchFailure('invalid token'))
+    } else {
+      axios.get('/orders.json?auth=' + token)
+        .then(res => {
+          const fetchedOrders = [];
+          for (let key in res.data) {
+            fetchedOrders.push({
+              ...res.data[key],
+              id: key
+            });
+          }
+          dispatch(orderFetchSuccess(fetchedOrders));
+        })
+        .catch(err => {
+          dispatch(orderFetchFailure(err));
+        });
+    }
   }
-
-
 }

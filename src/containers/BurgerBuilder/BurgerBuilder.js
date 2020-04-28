@@ -11,10 +11,7 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
 import * as actions from '../../store/actions';
 class BurgerBuilder extends Component {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {...}
-    // }
+   
     state = {
         purchasing: false,
     }
@@ -36,7 +33,13 @@ class BurgerBuilder extends Component {
     }
 
     purchaseHandler = () => {
-        this.setState( { purchasing: true } );
+        if(this.props.isAuth){
+            this.setState( { purchasing: true });
+        } else{
+            this.props.onPurchaseInit();            
+            this.props.onRedirectUrlAdded('/checkout');
+            this.props.history.push('/login');
+        }
     }
 
     purchaseCancelHandler = () => {
@@ -68,7 +71,9 @@ class BurgerBuilder extends Component {
                         disabled={disabledInfo}
                         purchasable={this.updatePurchaseState(this.props.ings)}
                         ordered={this.purchaseHandler}
-                        price={this.props.price} />
+                        price={this.props.price} 
+                        isAuth = {this.props.isAuth}
+                        />
                 </Aux>
             );
             orderSummary = <OrderSummary
@@ -96,7 +101,8 @@ const mapStateToProps = state => {
     return {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
-        error : state.burgerBuilder.error
+        error : state.burgerBuilder.error,
+        isAuth : state.authentication.userToken !== null
     };
 }
 
@@ -105,7 +111,8 @@ const mapDispatchToProps = dispatch => {
         onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
         onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
         onInitiIngredient: () => dispatch(actions.initIngredient()),
-        onPurchaseInit : ()=> dispatch(actions.purchaseInit())
+        onPurchaseInit : ()=> dispatch(actions.purchaseInit()),
+        onRedirectUrlAdded : (url) => dispatch(actions.setRedirectUrl(url))
     }
 }
 

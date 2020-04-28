@@ -3,7 +3,8 @@ import { updateObject } from '../utility';
 const initialState = {
     ingredients: null,
     totalPrice: 4,
-    error: false
+    error: false,
+    building : false
 };
 
 const INGREDIENT_PRICES = {
@@ -19,7 +20,8 @@ const addIngredient = (state, action) => {
     });
     const updatedState = {
         ingredients: updatedIngredients,
-        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
+        totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+        building : true
     }
     return updateObject(state, updatedState);
 }
@@ -29,14 +31,16 @@ const removeIngredient = (state, action) => {
     });
     const updatedState = {
         ingredients: updatedIngredients,
-        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+        totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
+        building : true
     }
     return updateObject(state, updatedState);
 }
 const setIngredients = (state, action) => {
     return updateObject(state, {
         ingredients: action.value,
-        totalPrice: 4
+        totalPrice: 4,
+        building : false
     });
 }
 const ingredientsFetchFailed = (state, action) => {
@@ -44,6 +48,7 @@ const ingredientsFetchFailed = (state, action) => {
         error: true
     });
 }
+
 const burgerBuilder = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ADD_INGREDIENT: return addIngredient(state, action);
